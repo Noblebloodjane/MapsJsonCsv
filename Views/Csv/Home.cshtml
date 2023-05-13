@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/Emptyview.cshtml";
+}
+
+<style>
+    div.scroll {
+        background-color: #808080;
+        width: 100%;
+        height: 70%;
+        overflow: auto;
+        color: #ffa500;
+    }
+</style>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("InputProcess", "Csv")">
+    <label>Key</label>
+    <input id="Apikey" type="text" placeholder="Input Api key" name="Apikey" />
+    <label>Latitude</label>
+    <input id="lat" type="text" name="Latitude" />
+    <label>Longitude</label>
+    <input id="log" type="text" name="Longitude" />
+    <label>Radius</label>
+    <input id="radius" type="text" name="Radius" />
+    <label>Category</label>
+    <input id="category" type="text" name="Category" />
+    <label>Append or Overwrite</label>
+    <select id="csvOption" name="csvOption">
+        <option value="overwrite">Overwrite</option>
+        <option value="append">Append</option>
+    </select>
+    <button type="submit">Submit</button>
+</form>
+
+<div class="scroll"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr("action");
+            var method = form.attr("method");
+            var data = form.serialize();
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                success: function (result) {
+                    $(".scroll").text(JSON.stringify(result, null, 2));
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
